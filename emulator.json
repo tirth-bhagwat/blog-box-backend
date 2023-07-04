@@ -1,0 +1,91 @@
+{
+	"contracts": {
+		"ExampleNFT": {
+			"source": "",
+			"aliases": {
+				"emulator": "f8d6e0586b0a20c7"
+			}
+		},
+		"FUSD": {
+			"source": "",
+			"aliases": {
+				"emulator": "f8d6e0586b0a20c7"
+			}
+		},
+		"FlowToken": {
+			"source": "",
+			"aliases": {
+				"emulator": "0ae53cb6e3f42a79"
+			}
+		},
+		"FungibleToken": {
+			"source": "",
+			"aliases": {
+				"emulator": "ee82856bf20e2aa6"
+			}
+		},
+		"Hello_new": "cadence/contracts/Hello_new.cdc",
+		"MetadataViews": {
+			"source": "",
+			"aliases": {
+				"emulator": "f8d6e0586b0a20c7"
+			}
+		},
+		"NFTStorefront": {
+			"source": "",
+			"aliases": {
+				"emulator": "f8d6e0586b0a20c7"
+			}
+		},
+		"NFTStorefrontV2": {
+			"source": "",
+			"aliases": {
+				"emulator": "f8d6e0586b0a20c7"
+			}
+		},
+		"NonFungibleToken": {
+			"source": "",
+			"aliases": {
+				"emulator": "f8d6e0586b0a20c7"
+			}
+		}
+	},
+	"networks": {
+		"emulator": "127.0.0.1:3569",
+		"mainnet": "access.mainnet.nodes.onflow.org:9000",
+		"testnet": "access.devnet.nodes.onflow.org:9000"
+	},
+	"accounts": {
+		"Aum": {
+			"address": "e03daebed8ca0615",
+			"key": "644514c7231b9125b605319c81eb9bf864eec26165cb591cc5570fcbec6cb6ed"
+		},
+		"Bhavya": {
+			"address": "045a1763c93006ca",
+			"key": "7547104e1296b73fb4a1e42596d8870b61cebe4b53287c913519f20f6b0d05b1"
+		},
+		"Chetan": {
+			"address": "120e725050340cab",
+			"key": "9e28a008bdde33b849c6bd5dbb79e3706d33e3848c92beafe2c1a75c801741d3"
+		},
+		"Devi": {
+			"address": "f669cb8d41ce0c74",
+			"key": "063975a45b5ab9ed06f58e6b73243dba53984060c9cb0d913da43277050116f8"
+		},
+		"default": {
+			"address": "f8d6e0586b0a20c7",
+			"key": "6d12eebfef9866c9b6fa92b97c6e705c26a1785b1e7944da701fc545a51d4673"
+		},
+		"emulator-account": {
+			"address": "f8d6e0586b0a20c7",
+			"key": "6d12eebfef9866c9b6fa92b97c6e705c26a1785b1e7944da701fc545a51d4673"
+		}
+	},
+	"deployments": {
+		"emulator": {
+			"default": [
+				"Hello_new"
+			]
+		}
+	}
+}
