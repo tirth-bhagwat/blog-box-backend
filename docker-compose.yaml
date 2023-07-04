@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  emulator:
+    image: emulator:latest
+    ports:
+      - 3569:3569
+      - 8080:8080
+      - 8888:8888
+      - 2345:2345
+
+    volumes:
+      - ./cadence:/cadence
+      - ./tmp:/tmp
+      - ./emulator.json:/flow.json
+      - ./output.log:/output.log
+
+    environment:
+      - FLOW_HOST=0.0.0.0
+      - PERSIST=true

@@ -1,0 +1,2 @@
+#!/bin/bash
+docker compose exec emulator flow scripts execute cadence/scripts/$1.cdc "${@:2}"

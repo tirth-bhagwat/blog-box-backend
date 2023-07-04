@@ -1,0 +1,53 @@
+#!/bin/python3
+import os
+import sys
+
+# create a new directory /tmp/tran
+if not os.path.exists('./tmp/tran'):
+    os.makedirs('./tmp/tran')
+
+tran_dir = "./cadence/transactions"
+tmp_dir = "./tmp/tran"
+docker_con = ""
+signer = "default"
+# get all args from the command line
+args = sys.argv
+
+if args[1] == "e":
+    docker_con = "docker compose exec emulator "
+    args.remove("e")
+
+if args[1].startswith("-x"):
+    signer = args[1][2:]
+    args.remove(args[1])
+
+# build the transaction
+
+# flow transactions build /home/ubuntu/flow-hack/one/cadence/transactions/tr2.cdc --authorizer default --proposer default --payer default --filter payload -s tx1
+
+res = os.system(f'''{docker_con} flow transactions build {tran_dir}/{args[1]}.cdc --authorizer {signer} --proposer {signer} --payer {signer} --filter payload -s {tmp_dir}/tx.build {' '.join(args[2:])}''')
+
+if res != 0:
+    print("Error in building transaction")
+    sys.exit(1)
+
+# sign the transaction
+
+# flow transactions sign ./tx1 --signer default --filter payload --save tx2
+
+res = os.system(f'''{docker_con} flow transactions sign {tmp_dir}/tx.build --signer {signer} --filter payload --save {tmp_dir}/tx.sign''')
+
+if res != 0:
+    print("Error in signing transaction")
+    sys.exit(1)
+
+# send the transaction
+res = os.system(f'''{docker_con} flow transactions send-signed {tmp_dir}/tx.sign''')
+
+if res != 0:
+    print("Error in sending transaction")
+    sys.exit(1)
+    
+
+
+
