@@ -1,4 +1,5 @@
 pub contract BlogManager {
+
     pub let BlogStoragePath : StoragePath
     pub let BlogPublicPath : PublicPath
     pub let MinterStoragePath: StoragePath
@@ -62,7 +63,5 @@ pub contract BlogManager {
         self.idCount = 1
 
         self.account.save(<-self.createEmptyCollection(), to: self.BlogStoragePath)
-
-        self.account.link<&{@BlogCollection}>(self.BlogPublicPath, target: self.BlogStoragePath)
 	}
 }
