@@ -1,5 +1,8 @@
 pub contract BlogManager {
 
+    pub let storagePath: StoragePath;
+    pub let blog_id: UInt32;
+
     pub enum BlogType: UInt8 {
         pub case PUBLIC
         pub case PRIVATE
@@ -24,27 +27,44 @@ pub contract BlogManager {
     }
 
     pub resource BlogDict {
-        pub let blogs: @{UInt32: Blog}
+        pub let blogs_free: @{UInt32: Blog}
+        pub let blogs_paid: @{UInt32: Blog}
 
         init() {
-            self.blogs <- {}
+            self.blogs_free <- {}
+            self.blogs_paid <- {}
         }
 
         destroy () {
-            destroy self.blogs
+            destroy self.blogs_free
+            destroy self.blogs_paid
         }
 
-        pub fun getBlog(id: UInt32): &Blog? {
+        // pub fun getBlog(id: UInt32): &Blog {
 
-            if self.blogs.containsKey(id){
-                return  &self.blogs[id] as &Blog?
-            } else {
-                return panic("Blog does not exist")
-            }
+        //     if self.blogs_pub.containsKey(id){
+        //         return (&self.blogs_pub[id] as &Blog?) ?? panic("Blog does not exist")
+        //     } else {
+        //         return panic("Blog does not exist")
+        //     }
 
-        }
+        // }
 
     }
 
-    
+    pub fun setup(): @BlogDict {
+        return <- create BlogDict()
+    }
+
+    pub fun generateBlog(title: String, description: String, body: String, author: Address, type: BlogType): UInt32 {
+
+        return 0
+
+
+    }
+    init() {
+        self.storagePath = /storage/BlogManager
+        self.blog_id = 0
+    }
+
 }

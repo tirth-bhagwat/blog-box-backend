@@ -1,14 +1,10 @@
 
-pub fun main(
-    a:String, b:Int
-):[String]{
+pub fun main():[String]{
 
-    var acc = getAccount(0xf8d6e0586b0a20c7)
+    var acc = getAccount(0x01cf0e2f2f715450)
     var contracts = acc.contracts.names
 
     log(contracts)
-    log(a)
-    log(b)
 
     return contracts
 

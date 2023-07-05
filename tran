@@ -1,6 +1,38 @@
 #!/bin/python3
+import json
 import os
 import sys
+
+
+def replace(name):
+    return
+    emulator_path = "./emulator.json"
+
+    with open(emulator_path, 'r') as f:
+        emulator = f.read()
+        emulator = json.loads(emulator)
+
+    accounts = emulator.get("accounts")
+
+    if accounts is None:
+        print(f"accounts section not found")
+
+    if name not in accounts.keys():
+        print(f"signer {name} not found in accounts")
+
+    # remove default signer from accounts
+    accounts.pop("default", None)
+
+    # rename signer to default
+    accounts["default"] = accounts[name]
+
+    # update accounts in emulator
+    emulator["accounts"] = accounts
+
+    # write emulator.json
+    with open("./emulator.json", 'w') as f:
+        f.write(json.dumps(emulator, indent=4))
+
 
 # create a new directory /tmp/tran
 if not os.path.exists('./tmp/tran'):
@@ -9,7 +41,7 @@ if not os.path.exists('./tmp/tran'):
 tran_dir = "./cadence/transactions"
 tmp_dir = "./tmp/tran"
 docker_con = ""
-signer = "default"
+name = "default"
 # get all args from the command line
 args = sys.argv
 
@@ -18,36 +50,42 @@ if args[1] == "e":
     args.remove("e")
 
 if args[1].startswith("-x"):
-    signer = args[1][2:]
+    name = args[1][2:].capitalize()
     args.remove(args[1])
 
 # build the transaction
 
 # flow transactions build /home/ubuntu/flow-hack/one/cadence/transactions/tr2.cdc --authorizer default --proposer default --payer default --filter payload -s tx1
 
-res = os.system(f'''{docker_con} flow transactions build {tran_dir}/{args[1]}.cdc --authorizer {signer} --proposer {signer} --payer {signer} --filter payload -s {tmp_dir}/tx.build {' '.join(args[2:])}''')
+if name != "default":
+    replace(name)
+
+res = os.system(f'''{docker_con} flow transactions build {tran_dir}/{args[1]}.cdc --authorizer {name} --proposer {name} --payer {name} --filter payload -s {tmp_dir}/tx.build {' '.join(args[2:])}''')
 
 if res != 0:
     print("Error in building transaction")
+    replace("emulator-account")
     sys.exit(1)
 
 # sign the transaction
 
 # flow transactions sign ./tx1 --signer default --filter payload --save tx2
 
-res = os.system(f'''{docker_con} flow transactions sign {tmp_dir}/tx.build --signer {signer} --filter payload --save {tmp_dir}/tx.sign''')
+res = os.system(f'''{docker_con} flow transactions sign {tmp_dir}/tx.build --signer {name} --filter payload --save {tmp_dir}/tx.sign''')
 
 if res != 0:
     print("Error in signing transaction")
+    replace("emulator-account")
     sys.exit(1)
+
+
 
 # send the transaction
 res = os.system(f'''{docker_con} flow transactions send-signed {tmp_dir}/tx.sign''')
 
 if res != 0:
     print("Error in sending transaction")
+    replace("emulator-account")
     sys.exit(1)
     
-
-
 
