@@ -1,2 +1,49 @@
-#!/bin/bash
-docker compose exec emulator flow deploy --update
+#!/bin/python3
+# docker compose exec emulator flow deploy --update $*
+import os
+import sys
+import json
+
+docker_con = "docker compose exec emulator "
+# get all args
+args = sys.argv
+
+# load emulator.json
+emulator_path = "./emulator.json"
+with open(emulator_path, 'r') as f:
+    emulator = f.read()
+    emulator = json.loads(emulator)
+
+
+accounts = emulator.get("accounts")
+
+if len(args) > 1 and args[1] == "e":
+    docker_con = ""
+    args.remove("e")
+
+if len(args) > 1 and args[1].startswith("-x"):
+    signer = args[1][2:].capitalize()
+    
+    if accounts is None:
+        print(f"accounts section not found")
+
+    if signer not in accounts.keys():
+        print(f"signer {signer} not found in accounts")
+
+    # remove default signer from accounts
+    accounts.pop("default", None)
+
+    # rename signer to default
+    accounts["default"] = accounts[signer]
+
+    # update accounts in emulator
+    emulator["accounts"] = accounts
+
+    # write emulator.json
+    with open("./flow.json", 'w') as f:
+        f.write(json.dumps(emulator, indent=4))
+
+
+# run flow command
+os.system(f"{docker_con} flow deploy --update")
+
