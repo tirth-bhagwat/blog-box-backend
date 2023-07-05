@@ -1,0 +1,10 @@
+#!/bin/bash
+
+chmod -R ug+rw /home/ubuntu/Projects/blog-box-backend/
+chown -R ubuntu:flow-proj /home/ubuntu/Projects/blog-box-backend/
+chmod -R ug+x /home/ubuntu/Projects/blog-box-backend/acc
+chmod -R ug+x /home/ubuntu/Projects/blog-box-backend/dep
+chmod -R ug+x /home/ubuntu/Projects/blog-box-backend/permit
+chmod -R ug+x /home/ubuntu/Projects/blog-box-backend/scr
+chmod -R ug+x /home/ubuntu/Projects/blog-box-backend/tran
+chmod -R ug+x /home/ubuntu/Projects/blog-box-backend/sign

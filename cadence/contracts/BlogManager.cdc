@@ -35,9 +35,11 @@ pub contract BlogManager {
 
     pub resource BlogCollection {
         pub let ownedBlogs: @{UInt32: Blog}
+        access(contract) let subscribers: {Address: Bool}
 
         init() {
             self.ownedBlogs <- {}
+            self.subscribers = {}
         }
 
         pub fun add(blog:@Blog,id:UInt32){
@@ -57,6 +59,10 @@ pub contract BlogManager {
 
         pub fun getKeys():[UInt32]{
             return self.ownedBlogs.keys;
+        }
+
+        pub fun getSubscribers():{Address: Bool}{
+            return self.subscribers;
         }
 
         destroy () {

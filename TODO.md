@@ -8,10 +8,15 @@
 - [ ] Auto remove reader if subscription is not paid
 
 # In Contract
+
 1. Function to get all readers
 2. Function to get blog with body
 3. Function to get blog metadata
-4. Function to Subscribe 
+4. Function to Subscribe
+
+# Things to figure out in fcl
+
+1. How to sign a message with private key of user
 
 # For Reader
 
