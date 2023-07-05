@@ -57,12 +57,8 @@
 	},
 	"accounts": {
 		"A": {
-			"address": "01cf0e2f2f715450",
-			"key": "a5dd0c437a4620d679e8af24d627148d5c08bfcf3adff29d80adfb500bc94e5f"
-		},
-		"B": {
-			"address": "179b6b1cb6755e31",
-			"key": "94ae37436d23380aa43f395af3b18b0ef455ec9b63a669becdb6b4f4252becc6"
+			"address": "e03daebed8ca0615",
+			"key": "63b12282f99d1043d6127e96a5ed09654daeb0f1e08b36a885ea7a504d26bc60"
 		},
 		"default": {
 			"address": "f8d6e0586b0a20c7",
