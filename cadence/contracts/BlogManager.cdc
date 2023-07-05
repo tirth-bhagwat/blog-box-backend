@@ -1,4 +1,8 @@
 pub contract BlogManager {
+    pub let BlogStoragePath : StoragePath
+    pub let BlogPublicPath : PublicPath
+    pub let MinterStoragePath: StoragePath
+    pub let idCount:UInt64
 
     pub enum BlogType: UInt8 {
         pub case PUBLIC
@@ -23,28 +27,42 @@ pub contract BlogManager {
         }
     }
 
-    pub resource BlogDict {
-        pub let blogs: @{UInt32: Blog}
+    pub resource BlogCollection {
+        pub let ownedBlogs: @{UInt32: Blog}
 
         init() {
-            self.blogs <- {}
+            self.ownedBlogs <- {}
         }
 
         destroy () {
-            destroy self.blogs
+            destroy self.ownedBlogs
         }
 
         pub fun getBlog(id: UInt32): &Blog? {
 
-            if self.blogs.containsKey(id){
-                return  &self.blogs[id] as &Blog?
+            if self.ownedBlogs.containsKey(id){
+                return  &self.ownedBlogs[id] as &Blog?
             } else {
                 return panic("Blog does not exist")
             }
 
         }
 
+
     }
 
-    
+    pub fun createEmptyCollection(): @BlogCollection{
+        return <- create BlogCollection()
+    }
+    init() {
+        self.BlogStoragePath = /storage/nftTutorialCollection
+        self.BlogPublicPath = /public/nftTutorialCollection
+        self.MinterStoragePath = /storage/nftTutorialMinter
+
+        self.idCount = 1
+
+        self.account.save(<-self.createEmptyCollection(), to: self.BlogStoragePath)
+
+        self.account.link<&{@BlogCollection}>(self.BlogPublicPath, target: self.BlogStoragePath)
+	}
 }
