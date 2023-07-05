@@ -1,5 +1,6 @@
 flow*.json*
 output.log
 tmp/*
+flowdb/*
 
 test.pkey
