@@ -18,4 +18,5 @@ services:
 
     environment:
       - FLOW_HOST=0.0.0.0
-      - PERSIST=false
+      - PERSIST=true
+      - RESET=false
