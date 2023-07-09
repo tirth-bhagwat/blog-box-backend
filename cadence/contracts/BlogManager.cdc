@@ -162,6 +162,32 @@ pub contract BlogManager {
         publicCapability.removeSubscriber(address: address)
     }
 
+    access(contract) fun verifySign( address: Address, message: String, signature: String, keyIndex: Int ): Bool 
+    {
+
+        let account = getAccount(address)
+        let publicKeys = account.keys.get(keyIndex: 1) ?? panic("No key with that index in account")
+        let publicKey = publicKeys.publicKey
+
+        let sign = signature.decodeHex()
+        let msg = message.utf8
+
+        //     signature: signature,
+        // signedData: message,
+        // domainSeparationTag: "",
+        // hashAlgorithm: HashAlgorithm.SHA2_256
+
+        publicKey.verify(
+            signature: sign,
+            signedData: msg,
+            domainSeparationTag: "",
+            hashAlgorithm: HashAlgorithm.SHA2_256
+        )
+
+        return  true
+
+    }
+
     pub fun createBlog(title: String, description: String, body: String, author: String, type: BlogType, blogCollection: &BlogCollection) {
 
         if blogCollection.getOwner() != self.account.address {
@@ -176,7 +202,15 @@ pub contract BlogManager {
         collection!.add(blog:<-newBlog,id:self.idCount);
     }
 
-    pub fun getBlog(id:UInt32, subscriptions: &Subscriptions): {String:String}? {
+    pub fun getBlog(id:UInt32, address: Address, message: String, signature: String, keyIndex: Int): {String:String}? {
+
+        if !self.isSubscribed(address: address) {
+            return nil;
+        }
+
+        if !self.verifySign(address: address, message: message, signature: signature, keyIndex: keyIndex) {
+            return nil;
+        }
 
         let collection = self.account.borrow<&BlogCollection>(from: self.BlogCollectionStoragePath) ?? panic("Could not borrow capability");
         let blog = collection.getBlog(id:id);
@@ -185,18 +219,19 @@ pub contract BlogManager {
             panic("Blog not found")
         }
 
-        if !self.isSubscribed(address: subscriptions.getSubscriberId()) {
-            return nil
-        }
 
         return blog;
 
     }
 
-    pub fun getAllBlogs(subscriptions: &Subscriptions):[{String:String}]?{
+    pub fun getAllBlogs(address: Address, message: String, signature: String, keyIndex: Int): [{String:String}]? {
         let collection = self.account.borrow<&BlogCollection>(from: self.BlogCollectionStoragePath) ?? panic("Could not borrow capability");
 
-        if !self.isSubscribed(address: subscriptions.getSubscriberId()) {
+        if !self.isSubscribed(address: address) {
+            return nil;
+        }
+
+        if !self.verifySign(address: address, message: message, signature: signature, keyIndex: keyIndex) {
             return nil;
         }
 
@@ -285,7 +320,7 @@ pub contract BlogManager {
 
         self.idCount = 0
         self.subscriptionCost = 22.0
-
+ 
         self.account.save(<-self.createEmptyCollection(), to: self.BlogCollectionStoragePath)
         self.account.link<&BlogCollection>(self.BlogCollectionPublicPath, target :self.BlogCollectionStoragePath)
 
