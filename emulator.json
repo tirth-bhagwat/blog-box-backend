@@ -58,7 +58,11 @@
 	"accounts": {
 		"A": {
 			"address": "e03daebed8ca0615",
-			"key": "63b12282f99d1043d6127e96a5ed09654daeb0f1e08b36a885ea7a504d26bc60"
+			"key": "9b3c9b7358b411be2a8086fe42b1bf9a5cef5f583a48084cd3f9a6eccff79ec5"
+		},
+		"B": {
+			"address": "045a1763c93006ca",
+			"key": "a13f75a88e84f164be164a0dd6a0327860121bcfec5be58ac65023001b2e71d3"
 		},
 		"default": {
 			"address": "f8d6e0586b0a20c7",
@@ -71,7 +75,7 @@
 	},
 	"deployments": {
 		"emulator": {
-			"A": [
+			"default": [
 				"BlogManager"
 			]
 		}

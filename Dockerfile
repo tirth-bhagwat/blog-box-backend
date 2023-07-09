@@ -12,6 +12,12 @@ ENV PATH="/root/.local/bin:${PATH}"
 
 # Create entrypoint.sh file
 RUN echo "#!/bin/bash" > /entrypoint.sh
+
+RUN echo "" >> /entrypoint.sh
+RUN echo "if [ \"$RESET\" = \"true\" ]; then" >> /entrypoint.sh
+RUN echo "rm /flowdb/emulator.json" >> /entrypoint.sh
+RUN echo "fi" >> /entrypoint.sh
+
 # # if persist = true
 RUN echo "if [ \"$PERSIST\" = \"true\" ]; then" >> /entrypoint.sh
 RUN echo "/root/.local/bin/flow emulator --persist > output.log" >> /entrypoint.sh

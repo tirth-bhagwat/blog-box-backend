@@ -1,11 +1,17 @@
+import BlogManager from 0xe03daebed8ca0615
 
-pub fun main():[String]{
 
-    var acc = getAccount(0x01cf0e2f2f715450)
+pub fun main():{Address:Bool}{
+
+    var acc = getAccount(0xe03daebed8ca0615)
     var contracts = acc.contracts.names
 
-    log(contracts)
+    var con = acc.contracts.borrow<&BlogManager>(name: "BlogManager")!
 
-    return contracts
+    return con.getSubscribers()
+
+    // log(contracts)
+
+    // return contracts
 
 }
