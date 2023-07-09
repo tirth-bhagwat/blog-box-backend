@@ -1,4 +1,5 @@
 import FungibleToken from 0xee82856bf20e2aa6
+import BlogManager from 0xe03daebed8ca0615 // address of the blogger account
 
 pub contract Reader {
 
@@ -9,9 +10,11 @@ pub contract Reader {
     pub resource Subscriptions{
 
         access(contract) let subscribedTo: {Address: Bool};
+        access(contract) let subscriber: Address;
 
-        init(){
+        init(_ subscriber: Address){
             self.subscribedTo = {};
+            self.subscriber = subscriber;
         }
 
         access(contract) fun subscribe(address: Address){
@@ -20,6 +23,10 @@ pub contract Reader {
 
         access(contract) fun unsubscribe(address: Address){
             self.subscribedTo.remove(key: address)
+        }
+
+        pub fun getSubscriberId(): Address{
+            return self.subscriber;
         }
 
         pub fun isSubscribed(address: Address): Bool{
@@ -44,23 +51,31 @@ pub contract Reader {
     }
 
     pub fun createEmptySubscribtion() : @Subscriptions{
-        return <-create Subscriptions()
+        return <-create Subscriptions(self.account.address);
     }
 
     pub fun getSubscriptions(): &Subscriptions{
         return self.account.getCapability<&Subscriptions>(self.SubscriptionPublicPath).borrow() ?? panic("Could not borrow capability from public path")
     }
 
-    pub fun subscribe(address: Address){
+    pub fun subscribe(bloggerAddr: Address){
         // TODO check if address exists in subscriber list then add
 
-        let subscription = self.account.borrow<&Subscriptions>(from: self.SubscriptionStoragePath) ?? panic("Could not borrow capability from storage path");
+        let blogger = getAccount(bloggerAddr);
+        let capa = blogger.getCapability<&BlogManager>(BlogManager.BlogCollectionPublicPath)!.borrow() ?? panic("Could not borrow capability from public path");
 
-        subscription.subscribe(address: address);
+        if capa.isSubscribed(address: bloggerAddr) {
+
+            let subscription = self.account.borrow<&Subscriptions>(from: self.SubscriptionStoragePath) ?? panic("Could not borrow capability from storage path");
+
+            subscription.subscribe(address: bloggerAddr);
+
+        }
+
 
     }
 
-    pub fun unsubscribe(address: Address){
+    access(contract) fun unsubscribe(address: Address){
         let subscription = self.account.borrow<&Subscriptions>(from: self.SubscriptionStoragePath) ?? panic("Could not borrow capability from storage path");
 
         subscription.unsubscribe(address: address);
