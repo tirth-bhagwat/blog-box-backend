@@ -10,7 +10,7 @@ convertions = {
     "0x7e60df042a9c0868": "0xFlowToken", # testnet
     "0xee82856bf20e2aa6": "0xFungibleToken", # emulator
     "0x9a0766d93b6608b7": "0xFungibleToken", # testnet
-    "0xe03daebed8ca0615": "0xBlogger"
+    "0xf669cb8d41ce0c74": "0xBlogger"
 }
 
 # create JS_PATH if not exists
