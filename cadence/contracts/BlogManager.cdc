@@ -1,10 +1,5 @@
 import FungibleToken from 0xee82856bf20e2aa6
 import FlowToken from 0x0ae53cb6e3f42a79
-// import Reader from 0xe03daebed8ca0615
-
-// import FungibleToken from 0x9a0766d93b6608b7
-// import FlowToken from 0x7e60df042a9c0868
-
 
 pub contract BlogManager {
 
@@ -241,9 +236,6 @@ pub contract BlogManager {
 
         for key in keys {
             let blog = collection.getBlog(id:key);
-            if (blog["type"] != "PUBLIC") {
-                blog.remove(key: "body")
-            }
             blogs.append(blog)
         }
 

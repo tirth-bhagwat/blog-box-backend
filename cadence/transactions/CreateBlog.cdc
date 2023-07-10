@@ -5,7 +5,6 @@ transaction{
     prepare(signer: AuthAccount ){
 
         self.signerAddr = signer.address
-
         
     }
     execute{
