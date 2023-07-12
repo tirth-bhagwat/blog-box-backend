@@ -1,4 +1,4 @@
-import BlogManager from 0xf669cb8d41ce0c74
+import BlogManager from 0xe03daebed8ca0615
 
 transaction(name: String, avatar: String, bio: String, subscriptionCost: UFix64) {
     let signerAddr: Address

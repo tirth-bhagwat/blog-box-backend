@@ -1,7 +1,7 @@
 
 import FungibleToken from 0xee82856bf20e2aa6
 import FlowToken from 0x0ae53cb6e3f42a79
-import BlogManager from 0xf669cb8d41ce0c74 // address of the blogger account
+import BlogManager from 0xe03daebed8ca0615 // address of the blogger account
 
 transaction(amount: UFix64) {
 
