@@ -1,17 +1,26 @@
+#!/usr/bin/python3
+
 import os
+import sys
 
 CADENCE_PATH = "./cadence"
 CADENCE_SUB_PATHS = ["contracts", "transactions", "scripts"]
 JS_PATH = "./js"
 TARGET_FILE = "cadence_code.js"
+PROD = False
 
 convertions = {
     "0x0ae53cb6e3f42a79": "0xFlowToken", # emulator
     "0x7e60df042a9c0868": "0xFlowToken", # testnet
     "0xee82856bf20e2aa6": "0xFungibleToken", # emulator
     "0x9a0766d93b6608b7": "0xFungibleToken", # testnet
-    "0xf669cb8d41ce0c74": "0xBlogger"
+    "0xe03daebed8ca0615": "0xBlogger"
 }
+
+args = sys.argv
+if len(args) > 1:
+    if args[1] == "prod" or args[1] == "p":
+        PROD = True
 
 # create JS_PATH if not exists
 if not os.path.exists(JS_PATH):
@@ -28,7 +37,13 @@ for sub_path in CADENCE_SUB_PATHS:
             newtext = f"export const {file[:-4]} = `\n"
             with open(f"{CADENCE_PATH}/{sub_path}/{file}", "r") as f:
                 for line in f.readlines():
-                    newtext += line
+                    formatted = line.replace("`", "\`")
+                    newtext += formatted
+
+            if file.startswith("_"):
+                if PROD:
+                    continue
+                file = file[1:]
 
             newtext += "\n`;\n"
 

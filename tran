@@ -81,7 +81,7 @@ if res != 0:
 
 
 # send the transaction
-res = os.system(f'''{docker_con} flow transactions send-signed {tmp_dir}/tx.sign''')
+res = os.system(f'''{docker_con} flow transactions send-signed -y {tmp_dir}/tx.sign''')
 
 if res != 0:
     print("Error in sending transaction")

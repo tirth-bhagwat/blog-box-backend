@@ -1,8 +1,8 @@
-import BlogManager from 0xf669cb8d41ce0c74
+import BlogManager from 0xe03daebed8ca0615
 
 pub fun main(): {String: String}
 {
-    let account = getAccount(0xf669cb8d41ce0c74)
+    let account = getAccount(0xe03daebed8ca0615)
 
     let capa = account.getCapability<&BlogManager.BlogCollection>(BlogManager.BlogCollectionPublicPath).borrow() ?? panic("Could not borrow capability from public collection")
 
