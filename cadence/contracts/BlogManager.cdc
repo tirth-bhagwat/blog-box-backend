@@ -180,13 +180,36 @@ pub contract BlogManager {
             let sign = signature.decodeHex()
             let msg = message.decodeHex()
 
-            return publicKey.verify(
+            let verificationRes = publicKey.verify(
                 signature: sign,
                 signedData: msg,
                 // domainSeparationTag: "",
                 domainSeparationTag: "FLOW-V0.0-user",
                 hashAlgorithm: HashAlgorithm.SHA3_256
             )
+
+            if !verificationRes {
+                return false
+            }
+
+            let msgText = self.hexToText(hex: message)
+            let msgTimestamp = UFix64.fromString(msgText)
+
+            if msgTimestamp == nil {
+                return false
+            }
+
+            let currentTimestamp = getCurrentBlock().timestamp;
+            
+            if msgTimestamp! > currentTimestamp {
+                return false
+            }
+
+            if (currentTimestamp - msgTimestamp!) > 90.0 {
+                return false
+            }
+
+            return true
 
         }
 
