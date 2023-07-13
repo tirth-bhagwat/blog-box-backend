@@ -395,7 +395,8 @@ pub contract BlogManager {
                 "address": self.ownerAddr.toString(),
                 "name": self.ownerName ?? "",
                 "avatar": self.ownerAvatar ?? "",
-                "bio": self.ownerBio ?? ""
+                "bio": self.ownerBio ?? "",
+                "subscriptionCost": self.subscriptionCost!.toString()
             }
         }
 
