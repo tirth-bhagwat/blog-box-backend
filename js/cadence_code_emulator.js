@@ -834,22 +834,17 @@ pub fun main(id: UInt32, address: Address, message: String, signature: String, k
 }
 
 `;
-export const getOwnersInfo = `
+export const isSubscribed = `
 import BlogManager from 0xBlogger
 
-pub fun main(owners:[Address]): { Address: {String: String} } {
-    var ownersInfo: { Address: {String: String} }= {}
-    for owner in owners{
 
-        let account = getAccount(owner)
-        let capa = account.getCapability<&BlogManager.BlogCollection>(BlogManager.BlogCollectionPublicPath).borrow() ?? panic("Could not borrow capability from public collection")
-        let ownerInfo = capa.getOwnerInfo()
-        ownersInfo[owner] = ownerInfo
-        
-    }
-    return ownersInfo
+pub fun main(reader: Address): Bool {
+    let account = getAccount(0xBlogger)
+    let collection = account.getCapability(BlogManager.BlogCollectionPublicPath).borrow<&BlogManager.BlogCollection>() ?? panic("Could not borrow capability");
+
+    return collection.isSubscribed(address: reader);
+
 }
-
 `;
 export const getAllBlogs = `
 import BlogManager from 0xBlogger
