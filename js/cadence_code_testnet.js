@@ -806,11 +806,11 @@ transaction(name: String, avatar: String, bio: String, subscriptionCost: UFix64)
 }
 `;
 export const getOwnerInfo = `
-import BlogManager from 0xf0883fe90c39efa4
+import BlogManager from 0xBlogger
 
 pub fun main(): {String: String}
 {
-    let account = getAccount(0xf0883fe90c39efa4)
+    let account = getAccount(0xBlogger)
 
     let capa = account.getCapability<&BlogManager.BlogCollection>(BlogManager.BlogCollectionPublicPath).borrow() ?? panic("Could not borrow capability from public collection")
 
@@ -834,15 +834,28 @@ pub fun main(id: UInt32, address: Address, message: String, signature: String, k
 }
 
 `;
+export const getOwnersInfo = `
+import BlogManager from 0xBlogger
+
+pub fun main(owners:[Address]): { Address: {String: String} } {
+    var ownersInfo: { Address: {String: String} }= {}
+    for owner in owners{
+
+        let account = getAccount(owner)
+        let capa = account.getCapability<&BlogManager.BlogCollection>(BlogManager.BlogCollectionPublicPath).borrow() ?? panic("Could not borrow capability from public collection")
+        let ownerInfo = capa.getOwnerInfo()
+        ownersInfo[owner] = ownerInfo
+        
+    }
+    return ownersInfo
+}
+
+`;
 export const getAllBlogs = `
 import BlogManager from 0xBlogger
 
 pub fun main(): [{String: String}]
 {
-    let account = getAccount(0xBlogger)
-
-    let capa = account.getCapability<&BlogManager.BlogCollection>(BlogManager.BlogCollectionPublicPath).borrow() ?? panic("Could not borrow capability from public collection")
-
     return BlogManager.getBlogMetadata()
 }
 

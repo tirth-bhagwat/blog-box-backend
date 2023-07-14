@@ -730,38 +730,6 @@ transaction() {
     }
 }
 `;
-export const _TransferFlow = `
-
-import FungibleToken from 0xFungibleToken
-import FlowToken from 0xFlowToken
-
-transaction(amount: UFix64, to: Address) {
-
-    // The Vault resource that holds the tokens that are being transferred
-    let sentVault: @FungibleToken.Vault
-
-    prepare(signer: AuthAccount) {
-
-        // Get a reference to the signer's stored vault
-        let vaultRef = signer.borrow<&FlowToken.Vault>(from: /storage/flowTokenVault)
-			?? panic("Could not borrow reference to the owner's Vault!")
-
-        // Withdraw tokens from the signer's stored vault
-        self.sentVault <- vaultRef.withdraw(amount: amount)
-    }
-
-    execute {
-        // Get a reference to the recipient's Receiver
-        let receiverRef =  getAccount(to)
-            .getCapability(/public/flowTokenReceiver)
-            .borrow<&{FungibleToken.Receiver}>()
-			?? panic("Could not borrow receiver reference to the recipient's Vault")
-
-        // Deposit the withdrawn tokens in the recipient's receiver
-        receiverRef.deposit(from: <-self.sentVault)
-    }
-}
-`;
 export const Subscribe = `
 
 import FungibleToken from 0xFungibleToken
@@ -837,32 +805,12 @@ transaction(name: String, avatar: String, bio: String, subscriptionCost: UFix64)
     }
 }
 `;
-export const _verifySign = `
-pub fun main(address: Address, message: String, signature: String, keyIndex: Int) : Bool {
-
-    let account = getAccount(address)
-    let publicKeys = account.keys.get(keyIndex: keyIndex) ?? panic("No key with that index in account")
-    let publicKey = publicKeys.publicKey
-
-    let sign = signature.decodeHex()
-    let msg = message.decodeHex()
-
-    return publicKey.verify(
-        signature: sign,
-        signedData: msg,
-        domainSeparationTag: "",
-        hashAlgorithm: HashAlgorithm.SHA3_256
-    )
-    
-}
-
-`;
 export const getOwnerInfo = `
-import BlogManager from 0xf0883fe90c39efa4
+import BlogManager from 0xBlogger
 
 pub fun main(): {String: String}
 {
-    let account = getAccount(0xf0883fe90c39efa4)
+    let account = getAccount(0xBlogger)
 
     let capa = account.getCapability<&BlogManager.BlogCollection>(BlogManager.BlogCollectionPublicPath).borrow() ?? panic("Could not borrow capability from public collection")
 
@@ -886,15 +834,28 @@ pub fun main(id: UInt32, address: Address, message: String, signature: String, k
 }
 
 `;
+export const getOwnersInfo = `
+import BlogManager from 0xBlogger
+
+pub fun main(owners:[Address]): { Address: {String: String} } {
+    var ownersInfo: { Address: {String: String} }= {}
+    for owner in owners{
+
+        let account = getAccount(owner)
+        let capa = account.getCapability<&BlogManager.BlogCollection>(BlogManager.BlogCollectionPublicPath).borrow() ?? panic("Could not borrow capability from public collection")
+        let ownerInfo = capa.getOwnerInfo()
+        ownersInfo[owner] = ownerInfo
+        
+    }
+    return ownersInfo
+}
+
+`;
 export const getAllBlogs = `
 import BlogManager from 0xBlogger
 
 pub fun main(): [{String: String}]
 {
-    let account = getAccount(0xBlogger)
-
-    let capa = account.getCapability<&BlogManager.BlogCollection>(BlogManager.BlogCollectionPublicPath).borrow() ?? panic("Could not borrow capability from public collection")
-
     return BlogManager.getBlogMetadata()
 }
 

@@ -6,7 +6,8 @@ import sys
 CADENCE_PATH = "./cadence"
 CADENCE_SUB_PATHS = ["contracts", "transactions", "scripts"]
 JS_PATH = "./js"
-TARGET_FILE = "cadence_code.js"
+TARGET_FILE = "cadence_code_emulator.js"
+# TARGET_FILE = "cadence_code_testnet.js"
 PROD = False
 
 convertions = {
@@ -56,8 +57,8 @@ for sub_path in CADENCE_SUB_PATHS:
                 with open(contractPath, "r") as f:
                     contractText = f.read()
 
-                contractText = contractText.replace("0x0ae53cb6e3f42a79" , "0x7e60df042a9c0868")
-                contractText = contractText.replace("0xee82856bf20e2aa6", "0x9a0766d93b6608b7")
+                # contractText = contractText.replace("0x0ae53cb6e3f42a79" , "0x7e60df042a9c0868")
+                # contractText = contractText.replace("0xee82856bf20e2aa6", "0x9a0766d93b6608b7")
                 newtext = newtext.replace("<<--BlogManagerHex-->>", contractText.encode("utf-8").hex())
 
             with open(f"{JS_PATH}/{TARGET_FILE}", "a") as f:
