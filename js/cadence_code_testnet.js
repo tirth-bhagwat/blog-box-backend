@@ -846,6 +846,23 @@ pub fun main(reader: Address): Bool {
 
 }
 `;
+export const getOwnersInfo = `
+import BlogManager from 0xBlogger
+
+pub fun main(owners:[Address]): { Address: {String: String} } {
+    var ownersInfo: { Address: {String: String} }= {}
+    for owner in owners{
+
+        let account = getAccount(owner)
+        let capa = account.getCapability<&BlogManager.BlogCollection>(BlogManager.BlogCollectionPublicPath).borrow() ?? panic("Could not borrow capability from public collection")
+        let ownerInfo = capa.getOwnerInfo()
+        ownersInfo[owner] = ownerInfo
+        
+    }
+    return ownersInfo
+}
+
+`;
 export const getAllBlogs = `
 import BlogManager from 0xBlogger
 
