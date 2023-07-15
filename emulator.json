@@ -1,87 +1,83 @@
 {
-	"contracts": {
-		"BlogManager": "cadence/contracts/BlogManager.cdc",
-		"ExampleNFT": {
-			"source": "",
-			"aliases": {
-				"emulator": "f8d6e0586b0a20c7"
-			}
-		},
-		"FUSD": {
-			"source": "",
-			"aliases": {
-				"emulator": "f8d6e0586b0a20c7"
-			}
-		},
-		"FlowToken": {
-			"source": "",
-			"aliases": {
-				"emulator": "0ae53cb6e3f42a79"
-			}
-		},
-		"FungibleToken": {
-			"source": "",
-			"aliases": {
-				"emulator": "ee82856bf20e2aa6"
-			}
-		},
-		"MetadataViews": {
-			"source": "",
-			"aliases": {
-				"emulator": "f8d6e0586b0a20c7"
-			}
-		},
-		"NFTStorefront": {
-			"source": "",
-			"aliases": {
-				"emulator": "f8d6e0586b0a20c7"
-			}
-		},
-		"NFTStorefrontV2": {
-			"source": "",
-			"aliases": {
-				"emulator": "f8d6e0586b0a20c7"
-			}
-		},
-		"NonFungibleToken": {
-			"source": "",
-			"aliases": {
-				"emulator": "f8d6e0586b0a20c7"
-			}
-		}
-	},
-	"networks": {
-		"emulator": "127.0.0.1:3569",
-		"mainnet": "access.mainnet.nodes.onflow.org:9000",
-		"testnet": "access.devnet.nodes.onflow.org:9000"
-	},
-	"accounts": {
-		"A": {
-			"address": "e03daebed8ca0615",
-			"key": "a8190a373086fab7dce199f1e34a3635bf9689f6972a1326fe1a27ff0467df0a"
-		},
-		"B": {
-			"address": "045a1763c93006ca",
-			"key": "8136bcd9808023c326ef77acab63f8e0c4f710971c05d5d394a50f4aac82c1d4"
-		},
-		"C": {
-			"address": "fd43f9148d4b725d",
-			"key": "4e1cf4dbc85d46abc500d9b6e853862223a2a1afd22a6387ebda20f0a69a095f"
-		},
-		"default": {
-			"address": "f8d6e0586b0a20c7",
-			"key": "6d12eebfef9866c9b6fa92b97c6e705c26a1785b1e7944da701fc545a51d4673"
-		},
-		"emulator-account": {
-			"address": "f8d6e0586b0a20c7",
-			"key": "6d12eebfef9866c9b6fa92b97c6e705c26a1785b1e7944da701fc545a51d4673"
-		}
-	},
-	"deployments": {
-		"emulator": {
-			"A": [
-				"BlogManager"
-			]
-		}
-	}
+    "contracts": {
+        "BlogManager": "cadence/contracts/BlogManager.cdc",
+        "ExampleNFT": {
+            "source": "",
+            "aliases": {
+                "emulator": "f8d6e0586b0a20c7"
+            }
+        },
+        "FUSD": {
+            "source": "",
+            "aliases": {
+                "emulator": "f8d6e0586b0a20c7"
+            }
+        },
+        "FlowToken": {
+            "source": "",
+            "aliases": {
+                "emulator": "0ae53cb6e3f42a79"
+            }
+        },
+        "FungibleToken": {
+            "source": "",
+            "aliases": {
+                "emulator": "ee82856bf20e2aa6"
+            }
+        },
+        "MetadataViews": {
+            "source": "",
+            "aliases": {
+                "emulator": "f8d6e0586b0a20c7"
+            }
+        },
+        "NFTStorefront": {
+            "source": "",
+            "aliases": {
+                "emulator": "f8d6e0586b0a20c7"
+            }
+        },
+        "NFTStorefrontV2": {
+            "source": "",
+            "aliases": {
+                "emulator": "f8d6e0586b0a20c7"
+            }
+        },
+        "NonFungibleToken": {
+            "source": "",
+            "aliases": {
+                "emulator": "f8d6e0586b0a20c7"
+            }
+        },
+        "SubscriptionsManager": "cadence/contracts/SubscriptionsManager.cdc"
+    },
+    "networks": {
+        "emulator": "127.0.0.1:3569",
+        "mainnet": "access.mainnet.nodes.onflow.org:9000",
+        "testnet": "access.devnet.nodes.onflow.org:9000"
+    },
+    "accounts": {
+        "A": {
+            "address": "e03daebed8ca0615",
+            "key": "bea77e31810ca2aed37ef20af0cf88af154b1b418205402b19831c0ed58733a8"
+        },
+        "default": {
+            "address": "f8d6e0586b0a20c7",
+            "key": "6d12eebfef9866c9b6fa92b97c6e705c26a1785b1e7944da701fc545a51d4673"
+        },
+        "emulator-account": {
+            "address": "f8d6e0586b0a20c7",
+            "key": "6d12eebfef9866c9b6fa92b97c6e705c26a1785b1e7944da701fc545a51d4673"
+        }
+    },
+    "deployments": {
+        "emulator": {
+            "default": [
+                "SubscriptionsManager"
+            ],
+            "A": [
+                "BlogManager"
+            ]
+        }
+    }
 }

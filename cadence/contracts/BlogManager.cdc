@@ -1,5 +1,6 @@
 import FungibleToken from 0xee82856bf20e2aa6
 import FlowToken from 0x0ae53cb6e3f42a79
+import SubscriptionsManager from 0xf8d6e0586b0a20c7 // address of the global subscriber account
 
 pub contract BlogManager {
 
@@ -8,53 +9,11 @@ pub contract BlogManager {
     pub let FlowTokenVaultPath: PublicPath
     pub let SubscriptionsStoragePath: StoragePath
     pub let SubscriptionsPublicPath: PublicPath
+    pub let SubscriptionsPrivatePath: PrivatePath
 
     pub enum BlogType: UInt8 {
         pub case PUBLIC
         pub case PRIVATE
-    }
-
-    pub resource Subscriptions {
-
-        priv let subscribedTo: {Address: Bool};
-        priv let subscriber: Address;
-
-        init(_ subscriber: Address) {
-            self.subscribedTo = {};
-            self.subscriber = subscriber;
-        }
-
-        access(contract) fun subscribe(blogger: Address) {
-            self.subscribedTo[blogger] = true;
-        }
-
-        access(contract) fun unsubscribe(address: Address){
-            self.subscribedTo.remove(key: address)
-        }
-
-        pub fun getSubscriberId(): Address{
-            return self.subscriber;
-        }
-
-        pub fun isSubscribed(address: Address): Bool{
-
-            let acct = getAccount(address)
-            let capa = acct.getCapability<&BlogManager.BlogCollection>(BlogManager.BlogCollectionPublicPath).borrow() ?? panic("Could not borrow capability from public Blogger Collection")
-
-            if address == capa.getOwner() {
-                return true;
-            }
-
-            if self.getSubscriptions().contains(address) {
-                return capa.isSubscribed(address: address)
-            }
-            return false;
-        }
-
-        pub fun getSubscriptions() : [Address]{
-            return self.subscribedTo.keys;
-        }
-
     }
 
     pub resource Blog {
@@ -484,10 +443,6 @@ pub contract BlogManager {
         return <- create BlogCollection(self.account.address, name: nil, avatar: nil, bio: nil, subscriptionCost: nil)
     }
 
-    pub fun createEmptySubscriptions(_ subscriber: Address): @Subscriptions{
-        return <- create Subscriptions(subscriber)
-    }
-
     access(contract) fun addSubscriber(address: Address, timestamp: UFix64){
         // get the public capability
         let publicCapability = self.account.getCapability<&BlogCollection>(self.BlogCollectionPublicPath).borrow() ?? panic("Could not borrow capability");
@@ -553,7 +508,7 @@ pub contract BlogManager {
         return blogs;
     }
 
-    pub fun subscribe(_ address: Address, vault: @FungibleToken.Vault, subscriptions: &Subscriptions) : Bool {
+    pub fun subscribe(_ address: Address, vault: @FungibleToken.Vault, subscriptions: &SubscriptionsManager.Subscriptions{SubscriptionsManager.SubscriptionsPriv}) : Bool {
         let bloggerCapability = self.account.getCapability<&BlogManager.BlogCollection>(BlogManager.BlogCollectionPublicPath).borrow() ?? panic("Could not borrow capability")
 
         if bloggerCapability.isCostNil() {
@@ -575,13 +530,13 @@ pub contract BlogManager {
         depositCapability.deposit(from: <- vault)
         let timestamp: UFix64 = getCurrentBlock().timestamp;
         self.addSubscriber(address: address, timestamp: timestamp)
-        subscriptions.subscribe(blogger: address)
+        SubscriptionsManager.subscribe(blogger: address, reader: address, subscriptions: subscriptions)
 
         return true
         
     }
 
-    pub fun unsubscribe(readerAddr: Address, subscriptions: &Subscriptions) : Bool {
+    pub fun unsubscribe(readerAddr: Address, subscriptions: &SubscriptionsManager.Subscriptions{SubscriptionsManager.SubscriptionsPriv}) : Bool {
         if !self.isSubscribed(address: readerAddr) || subscriptions.getSubscriberId() != readerAddr {
             panic("Not subscribed")
         }
@@ -609,19 +564,22 @@ pub contract BlogManager {
         self.BlogCollectionStoragePath = /storage/BlogCollection
         self.BlogCollectionPublicPath = /public/BlogCollection
 
-        self.SubscriptionsStoragePath = /storage/Subscriptions
-        self.SubscriptionsPublicPath = /public/Subscriptions
+        self.SubscriptionsStoragePath = SubscriptionsManager.SubscriptionsStoragePath;
+        self.SubscriptionsPublicPath = SubscriptionsManager.SubscriptionsPublicPath;
+        self.SubscriptionsPrivatePath = SubscriptionsManager.SubscriptionsPrivatePath;
 
         self.FlowTokenVaultPath = /public/flowTokenReceiver
 
         self.account.save(<-self.createEmptyCollection(), to: self.BlogCollectionStoragePath)
         self.account.link<&BlogCollection>(self.BlogCollectionPublicPath, target :self.BlogCollectionStoragePath)
 
-        self.account.save(<-self.createEmptySubscriptions(self.account.address), to: self.SubscriptionsStoragePath)
-        self.account.link<&Subscriptions>(self.SubscriptionsPublicPath, target :self.SubscriptionsStoragePath)
+        self.account.save(<-SubscriptionsManager.createEmptySubscriptions(self.account.address), to: self.SubscriptionsStoragePath)
+        self.account.link<&SubscriptionsManager.Subscriptions{SubscriptionsManager.SubscriptionsPub}>(self.SubscriptionsPublicPath, target :self.SubscriptionsStoragePath)
+        self.account.link<&SubscriptionsManager.Subscriptions{SubscriptionsManager.SubscriptionsPriv}>(self.SubscriptionsPrivatePath, target :self.SubscriptionsStoragePath)
 
-        let capa = self.account.getCapability<&Subscriptions>(self.SubscriptionsPublicPath).borrow() ?? panic("Could not borrow capability Subscriptions from Blogger's public path")
-        capa.subscribe(blogger: self.account.address)
+        let capa = self.account.getCapability<&SubscriptionsManager.Subscriptions{SubscriptionsManager.SubscriptionsPriv}>(self.SubscriptionsPrivatePath).borrow() ?? panic("Could not borrow capability Subscriptions from Blogger's public path")
+
+        SubscriptionsManager.subscribe(blogger: self.account.address, reader:self.account.address, subscriptions: capa)
 
 	}
 }
