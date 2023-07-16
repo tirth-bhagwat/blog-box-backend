@@ -6,16 +6,40 @@ import sys
 CADENCE_PATH = "./cadence"
 CADENCE_SUB_PATHS = ["contracts", "transactions", "scripts"]
 JS_PATH = "./js"
-TARGET_FILE = "cadence_code_emulator.js"
-# TARGET_FILE = "cadence_code_testnet.js"
+TARGET_FILE_EMULATOR = "cadence_code_emulator.js"
+TARGET_FILE_TESTNET = "cadence_code_testnet.js"
 PROD = False
 
+
+def write_BlogManager(text, testnet=False):
+    contractPath = f"{CADENCE_PATH}/contracts/BlogManager.cdc"
+
+    with open(contractPath, "r") as f:
+        contractText = f.read()
+
+    if testnet:
+        contractText = contractText.replace("0x0ae53cb6e3f42a79", "0x7e60df042a9c0868")
+        contractText = contractText.replace("0xee82856bf20e2aa6", "0x9a0766d93b6608b7")
+
+    tmp_txt = text.replace("<<--BlogManagerHex-->>", contractText.encode("utf-8").hex())
+
+    if testnet:
+        to_replace = "0xf8d6e0586b0a20c7".encode("utf-8").hex()
+        tmp_txt = tmp_txt.replace(
+            to_replace,
+            "{_____<<--Add__SubscriptionsManager__Account's__Hex__Here-->>_____}",
+        )
+
+    return tmp_txt
+
+
 convertions = {
-    "0x0ae53cb6e3f42a79": "0xFlowToken", # emulator
-    "0x7e60df042a9c0868": "0xFlowToken", # testnet
-    "0xee82856bf20e2aa6": "0xFungibleToken", # emulator
-    "0x9a0766d93b6608b7": "0xFungibleToken", # testnet
-    "0xe03daebed8ca0615": "0xBlogger"
+    "0x0ae53cb6e3f42a79": "0xFlowToken",  # emulator
+    "0x7e60df042a9c0868": "0xFlowToken",  # testnet
+    "0xee82856bf20e2aa6": "0xFungibleToken",  # emulator
+    "0x9a0766d93b6608b7": "0xFungibleToken",  # testnet
+    "0xe03daebed8ca0615": "0xBlogger",
+    "0xf8d6e0586b0a20c7": "0xDeployer",
 }
 
 args = sys.argv
@@ -27,7 +51,10 @@ if len(args) > 1:
 if not os.path.exists(JS_PATH):
     os.makedirs(JS_PATH)
 
-with open(f"{JS_PATH}/{TARGET_FILE}", "w") as f:
+with open(f"{JS_PATH}/{TARGET_FILE_EMULATOR}", "w") as f:
+    f.write("")
+
+with open(f"{JS_PATH}/{TARGET_FILE_TESTNET}", "w") as f:
     f.write("")
 
 
@@ -51,20 +78,19 @@ for sub_path in CADENCE_SUB_PATHS:
             for key in convertions.keys():
                 newtext = newtext.replace(key, convertions[key])
 
-            if file == "DeployContract.cdc":
-                contractPath = f"{CADENCE_PATH}/contracts/BlogManager.cdc"
-                
-                with open(contractPath, "r") as f:
-                    contractText = f.read()
+            with open(f"{JS_PATH}/{TARGET_FILE_TESTNET}", "a") as f:
+                tmp = newtext
+                if file == "DeployContract.cdc":
+                    tmp = write_BlogManager(newtext, testnet=True)
 
-                # contractText = contractText.replace("0x0ae53cb6e3f42a79" , "0x7e60df042a9c0868")
-                # contractText = contractText.replace("0xee82856bf20e2aa6", "0x9a0766d93b6608b7")
-                newtext = newtext.replace("<<--BlogManagerHex-->>", contractText.encode("utf-8").hex())
+                f.write(tmp)
 
-            with open(f"{JS_PATH}/{TARGET_FILE}", "a") as f:
-                f.write(newtext)
+            with open(f"{JS_PATH}/{TARGET_FILE_EMULATOR}", "a") as f:
+                tmp = newtext
+                if file == "DeployContract.cdc":
+                    tmp = write_BlogManager(newtext, testnet=False)
+
+                f.write(tmp)
+
 
 print("Done!")
-
-
-
