@@ -160,7 +160,7 @@ pub contract BlogManager {
 
             let currentTimestamp = getCurrentBlock().timestamp;
             
-            if msgTimestamp! > currentTimestamp {
+            if msgTimestamp! > (currentTimestamp + 10.0) {
                 return false
             }
 
