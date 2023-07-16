@@ -68,7 +68,7 @@ pub contract SubscriptionsManager {
 export const BlogManager = `
 import FungibleToken from 0xFungibleToken
 import FlowToken from 0xFlowToken
-import SubscriptionsManager from 0xf8d6e0586b0a20c7 // address of the global subscriber account
+import SubscriptionsManager from 0xDeployer // address of the global subscriber account
 
 pub contract BlogManager {
 
@@ -734,7 +734,7 @@ export const Subscribe = `
 import FungibleToken from 0xFungibleToken
 import FlowToken from 0xFlowToken
 import BlogManager from 0xBlogger // address of the blogger account
-import SubscriptionsManager from 0xf8d6e0586b0a20c7 // address of the global subscriber account
+import SubscriptionsManager from 0xDeployer // address of the global subscriber account
 
 transaction(amount: UFix64) {
 
@@ -821,7 +821,7 @@ pub fun main(): {String: String}
 
 `;
 export const getSubscriptions = `
-import SubscriptionsManager from 0xf8d6e0586b0a20c7 // address of the global subscriber account
+import SubscriptionsManager from 0xDeployer // address of the global subscriber account
 
 pub fun main(reader:Address): [Address] {
 
@@ -850,11 +850,11 @@ pub fun main(id: UInt32, address: Address, message: String, signature: String, k
 
 `;
 export const isSubscribed = `
-import BlogManager from 0xd3b0963e3dbb5beb
+import BlogManager from 0xBlogger
 
 
 pub fun main(reader: Address): Bool {
-    let account = getAccount(0xd3b0963e3dbb5beb)
+    let account = getAccount(0xBlogger)
     let collection = account.getCapability(BlogManager.BlogCollectionPublicPath).borrow<&BlogManager.BlogCollection>() ?? panic("Could not borrow capability");
 
     return collection.isSubscribed(address: reader);
