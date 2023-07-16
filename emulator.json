@@ -1,83 +1,97 @@
 {
-    "contracts": {
-        "BlogManager": "cadence/contracts/BlogManager.cdc",
-        "ExampleNFT": {
-            "source": "",
-            "aliases": {
-                "emulator": "f8d6e0586b0a20c7"
-            }
-        },
-        "FUSD": {
-            "source": "",
-            "aliases": {
-                "emulator": "f8d6e0586b0a20c7"
-            }
-        },
-        "FlowToken": {
-            "source": "",
-            "aliases": {
-                "emulator": "0ae53cb6e3f42a79"
-            }
-        },
-        "FungibleToken": {
-            "source": "",
-            "aliases": {
-                "emulator": "ee82856bf20e2aa6"
-            }
-        },
-        "MetadataViews": {
-            "source": "",
-            "aliases": {
-                "emulator": "f8d6e0586b0a20c7"
-            }
-        },
-        "NFTStorefront": {
-            "source": "",
-            "aliases": {
-                "emulator": "f8d6e0586b0a20c7"
-            }
-        },
-        "NFTStorefrontV2": {
-            "source": "",
-            "aliases": {
-                "emulator": "f8d6e0586b0a20c7"
-            }
-        },
-        "NonFungibleToken": {
-            "source": "",
-            "aliases": {
-                "emulator": "f8d6e0586b0a20c7"
-            }
-        },
-        "SubscriptionsManager": "cadence/contracts/SubscriptionsManager.cdc"
-    },
-    "networks": {
-        "emulator": "127.0.0.1:3569",
-        "mainnet": "access.mainnet.nodes.onflow.org:9000",
-        "testnet": "access.devnet.nodes.onflow.org:9000"
-    },
-    "accounts": {
-        "A": {
-            "address": "e03daebed8ca0615",
-            "key": "bea77e31810ca2aed37ef20af0cf88af154b1b418205402b19831c0ed58733a8"
-        },
-        "default": {
-            "address": "f8d6e0586b0a20c7",
-            "key": "6d12eebfef9866c9b6fa92b97c6e705c26a1785b1e7944da701fc545a51d4673"
-        },
-        "emulator-account": {
-            "address": "f8d6e0586b0a20c7",
-            "key": "6d12eebfef9866c9b6fa92b97c6e705c26a1785b1e7944da701fc545a51d4673"
-        }
-    },
-    "deployments": {
-        "emulator": {
-            "default": [
-                "SubscriptionsManager"
-            ],
-            "A": [
-                "BlogManager"
-            ]
-        }
-    }
+	"contracts": {
+		"BlogManager": "cadence/contracts/BlogManager.cdc",
+		"ExampleNFT": {
+			"source": "",
+			"aliases": {
+				"emulator": "f8d6e0586b0a20c7"
+			}
+		},
+		"FUSD": {
+			"source": "",
+			"aliases": {
+				"emulator": "f8d6e0586b0a20c7"
+			}
+		},
+		"FlowToken": {
+			"source": "",
+			"aliases": {
+				"emulator": "0ae53cb6e3f42a79"
+			}
+		},
+		"FungibleToken": {
+			"source": "",
+			"aliases": {
+				"emulator": "ee82856bf20e2aa6"
+			}
+		},
+		"MetadataViews": {
+			"source": "",
+			"aliases": {
+				"emulator": "f8d6e0586b0a20c7"
+			}
+		},
+		"NFTStorefront": {
+			"source": "",
+			"aliases": {
+				"emulator": "f8d6e0586b0a20c7"
+			}
+		},
+		"NFTStorefrontV2": {
+			"source": "",
+			"aliases": {
+				"emulator": "f8d6e0586b0a20c7"
+			}
+		},
+		"NonFungibleToken": {
+			"source": "",
+			"aliases": {
+				"emulator": "f8d6e0586b0a20c7"
+			}
+		},
+		"SubscriptionsManager": "cadence/contracts/SubscriptionsManager.cdc"
+	},
+	"networks": {
+		"emulator": "127.0.0.1:3569",
+		"mainnet": "access.mainnet.nodes.onflow.org:9000",
+		"testnet": "access.devnet.nodes.onflow.org:9000"
+	},
+	"accounts": {
+		"A": {
+			"address": "e03daebed8ca0615",
+			"key": "49bd7ac8ed692efc07274dd066750c9842343421d6324922d52a000da70ae41b"
+		},
+		"default": {
+			"address": "f8d6e0586b0a20c7",
+			"key": "6d12eebfef9866c9b6fa92b97c6e705c26a1785b1e7944da701fc545a51d4673"
+		},
+		"emulator-account": {
+			"address": "f8d6e0586b0a20c7",
+			"key": "6d12eebfef9866c9b6fa92b97c6e705c26a1785b1e7944da701fc545a51d4673"
+		},
+		"tirthb": {
+			"address": "1904025b12b54b92",
+			"key": {
+				"type": "file",
+				"location": "tirthb.pkey"
+			}
+		},
+		"tst1": {
+			"address": "1942ea8bda9f6da0",
+			"key": {
+				"type": "file",
+				"location": "tst1.pkey"
+			}
+		}
+	},
+	"deployments": {
+		"emulator": {
+			"A": [
+				"BlogManager"
+			],
+			"tirthb": [
+				"SubscriptionsManager"
+			]
+		}
+	}
 }

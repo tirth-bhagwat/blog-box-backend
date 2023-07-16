@@ -21,16 +21,16 @@ def write_BlogManager(text, testnet=False):
         contractText = contractText.replace("0x0ae53cb6e3f42a79", "0x7e60df042a9c0868")
         contractText = contractText.replace("0xee82856bf20e2aa6", "0x9a0766d93b6608b7")
 
-    newtext = text.replace("<<--BlogManagerHex-->>", contractText.encode("utf-8").hex())
+    tmp_txt = text.replace("<<--BlogManagerHex-->>", contractText.encode("utf-8").hex())
 
     if testnet:
         to_replace = "0xf8d6e0586b0a20c7".encode("utf-8").hex()
-        newtext = newtext.replace(
+        tmp_txt = tmp_txt.replace(
             to_replace,
             "{_____<<--Add__SubscriptionsManager__Account's__Hex__Here-->>_____}",
         )
 
-    return newtext
+    return tmp_txt
 
 
 convertions = {
@@ -77,17 +77,19 @@ for sub_path in CADENCE_SUB_PATHS:
             for key in convertions.keys():
                 newtext = newtext.replace(key, convertions[key])
 
-            with open(f"{JS_PATH}/{TARGET_FILE_EMULATOR}", "a") as f:
-                if file == "DeployContract.cdc":
-                    newtext = write_BlogManager(newtext, testnet=False)
-
-                f.write(newtext)
-
             with open(f"{JS_PATH}/{TARGET_FILE_TESTNET}", "a") as f:
+                tmp = newtext
                 if file == "DeployContract.cdc":
-                    newtext = write_BlogManager(newtext, testnet=True)
+                    tmp = write_BlogManager(newtext, testnet=True)
 
-                f.write(newtext)
+                f.write(tmp)
+
+            with open(f"{JS_PATH}/{TARGET_FILE_EMULATOR}", "a") as f:
+                tmp = newtext
+                if file == "DeployContract.cdc":
+                    tmp = write_BlogManager(newtext, testnet=False)
+
+                f.write(tmp)
 
 
 print("Done!")
