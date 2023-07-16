@@ -570,16 +570,43 @@ pub contract BlogManager {
 
         self.FlowTokenVaultPath = /public/flowTokenReceiver
 
+        let collectionConditions = [
+            self.account.storagePaths.contains(self.BlogCollectionStoragePath),
+            self.account.getCapability<&BlogCollection>(self.BlogCollectionPublicPath).check()
+        ]
+
+        if collectionConditions.contains(true) {
+            panic("Invalid BlogCollection contract")
+        }
         self.account.save(<-self.createEmptyCollection(), to: self.BlogCollectionStoragePath)
         self.account.link<&BlogCollection>(self.BlogCollectionPublicPath, target :self.BlogCollectionStoragePath)
 
-        self.account.save(<-SubscriptionsManager.createEmptySubscriptions(self.account.address), to: self.SubscriptionsStoragePath)
-        self.account.link<&SubscriptionsManager.Subscriptions{SubscriptionsManager.SubscriptionsPub}>(self.SubscriptionsPublicPath, target :self.SubscriptionsStoragePath)
-        self.account.link<&SubscriptionsManager.Subscriptions{SubscriptionsManager.SubscriptionsPriv}>(self.SubscriptionsPrivatePath, target :self.SubscriptionsStoragePath)
+        let subscriptionsConditions = [
+            self.account.storagePaths.contains(SubscriptionsManager.SubscriptionsStoragePath),
+            self.account.getCapability<&SubscriptionsManager.Subscriptions{SubscriptionsManager.SubscriptionsPub}>(SubscriptionsManager.SubscriptionsPublicPath).check(),
+            self.account.getCapability<&SubscriptionsManager.Subscriptions{SubscriptionsManager.SubscriptionsPriv}>(SubscriptionsManager.SubscriptionsPrivatePath).check()
+        ]
 
-        let capa = self.account.getCapability<&SubscriptionsManager.Subscriptions{SubscriptionsManager.SubscriptionsPriv}>(self.SubscriptionsPrivatePath).borrow() ?? panic("Could not borrow capability Subscriptions from Blogger's public path")
+        if subscriptionsConditions.contains(true) {
 
-        SubscriptionsManager.subscribe(blogger: self.account.address, reader:self.account.address, subscriptions: capa)
+            if subscriptionsConditions[0] && subscriptionsConditions[1] && subscriptionsConditions[2] {
+                
+                let capa = self.account.getCapability<&SubscriptionsManager.Subscriptions{SubscriptionsManager.SubscriptionsPriv}>(self.SubscriptionsPrivatePath).borrow() ?? panic("Could not borrow capability Subscriptions from Blogger's public path")
+                SubscriptionsManager.subscribe(blogger: self.account.address, reader:self.account.address, subscriptions: capa)
+            }
+            else {
+                panic("Invalid SubscriptionsManager contract")
+            }
+
+        }
+        else {
+            self.account.save(<-SubscriptionsManager.createEmptySubscriptions(self.account.address), to: self.SubscriptionsStoragePath)
+            self.account.link<&SubscriptionsManager.Subscriptions{SubscriptionsManager.SubscriptionsPub}>(self.SubscriptionsPublicPath, target :self.SubscriptionsStoragePath)
+            self.account.link<&SubscriptionsManager.Subscriptions{SubscriptionsManager.SubscriptionsPriv}>(self.SubscriptionsPrivatePath, target :self.SubscriptionsStoragePath)
+            let capa = self.account.getCapability<&SubscriptionsManager.Subscriptions{SubscriptionsManager.SubscriptionsPriv}>(self.SubscriptionsPrivatePath).borrow() ?? panic("Could not borrow capability Subscriptions from Blogger's public path")
+
+            SubscriptionsManager.subscribe(blogger: self.account.address, reader:self.account.address, subscriptions: capa)
+        }
 
 	}
 }

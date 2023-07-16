@@ -7,9 +7,9 @@ pub fun main(): Bool {
     // account.contracts.get(name:"MyContract")!.publicTypes()
     // let typ = capa.publicTypes()[0].getType()
     // let cap = account.getCapability(/public/BlogCollection);
-    let capa = account.getCapability<&SubscriptionsManager.Subscriptions>(SubscriptionsManager.SubscriptionsPublicPath).borrow() ?? panic("Could not borrow capability Subscriptions from Blogger's public path")
+    let capa = account.getCapability<&SubscriptionsManager.Subscriptions{SubscriptionsManager.SubscriptionsPub}>(SubscriptionsManager.SubscriptionsPublicPath).check()
+    
 
-
-    return true
+    return capa
 
 }
