@@ -139,7 +139,8 @@ pub contract BlogManager {
             let sign = signature.decodeHex()
             let msg = message.decodeHex()
 
-            let verificationRes = publicKey.verify(
+            // let verificationRes = publicKey.verify(
+            return publicKey.verify(
                 signature: sign,
                 signedData: msg,
                 // domainSeparationTag: "",
@@ -147,28 +148,28 @@ pub contract BlogManager {
                 hashAlgorithm: HashAlgorithm.SHA3_256
             )
 
-            if !verificationRes {
-                return false
-            }
+            // if !verificationRes {
+            //     return false
+            // }
 
-            let msgText = self.hexToText(hex: message)
-            let msgTimestamp = UFix64.fromString(msgText)
+            // let msgText = self.hexToText(hex: message)
+            // let msgTimestamp = UFix64.fromString(msgText)
 
-            if msgTimestamp == nil {
-                return false
-            }
+            // if msgTimestamp == nil {
+            //     return false
+            // }
 
-            let currentTimestamp = getCurrentBlock().timestamp;
+            // let currentTimestamp = getCurrentBlock().timestamp;
             
-            if msgTimestamp! > (currentTimestamp + 10.0) {
-                return false
-            }
+            // if msgTimestamp! > (currentTimestamp + 10.0) {
+            //     return false
+            // }
 
-            if (currentTimestamp - msgTimestamp!) > 90.0 {
-                return false
-            }
+            // if (currentTimestamp - msgTimestamp!) > 90.0 {
+            //     return false
+            // }
 
-            return true
+            // return true
 
         }
 
