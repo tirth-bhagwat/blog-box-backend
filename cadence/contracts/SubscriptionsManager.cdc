@@ -17,7 +17,7 @@ pub contract SubscriptionsManager {
 
     pub resource Subscriptions: SubscriptionsPub, SubscriptionsPriv {
 
-        priv let subscribedTo: {Address: Bool};
+        priv var subscribedTo: {Address: Bool};
         priv let subscriber: Address;
 
         init(_ subscriber: Address) {
